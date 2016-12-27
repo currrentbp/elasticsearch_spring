@@ -51,7 +51,7 @@ public class TestEsClient  {
 
     @Test
     public void getList(){
-        List<Student> studens = studentService.getStudents("baopan");
+        List<Student> studens = studentService.getStudents("baopan2");
         System.out.println("====>getList: students:"+JSON.toJSONString(studens));
 
     }

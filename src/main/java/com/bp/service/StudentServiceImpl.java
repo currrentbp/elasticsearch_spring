@@ -7,6 +7,7 @@ import org.elasticsearch.action.get.MultiGetRequest;
 import org.elasticsearch.action.get.MultiGetResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -53,16 +54,17 @@ public class StudentServiceImpl implements StudentService {
 
     public List<Student> getStudents(String name) {
         System.out.println("===>getStudents: name:" + JSON.toJSONString(name));
+        QueryBuilder queryBuilder = QueryBuilders.matchQuery("name",name);
+
         SearchResponse actionGet = client.prepareSearch("lenews").setTypes("student")
-                .setQuery(QueryBuilders.boolQuery().must(QueryBuilders.termQuery("name", name))
-                ).execute().actionGet();
+                .setQuery(queryBuilder).execute().actionGet();
         SearchHits hits = actionGet.getHits();
-        System.out.println("===>getStudents: hits:"+JSON.toJSONString(hits));
         List<Map<String, Object>> matchRsult = new LinkedList<Map<String, Object>>();
         for (SearchHit hit : hits.getHits())
         {
             matchRsult.add(hit.getSource());
         }
+        System.out.println(JSON.toJSONString(matchRsult));
 //        GetResponse response1 = client.prepareGet("lenews", "student", "").execute().actionGet();
         return null;
     }
